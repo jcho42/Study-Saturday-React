@@ -1,8 +1,7 @@
 'use strict';
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 const db = require('../db');
-const Student = require('./students');
+const Student = require('./students')
 
 const Test = db.define('test', {
   subject: {
@@ -13,26 +12,29 @@ const Test = db.define('test', {
     type: Sequelize.INTEGER,
     allowNull: false
   }
-});
+})
 
 Test.passing = function() {
-  return Test.findAll({
-    where: {
-      grade: {
-        [Op.gt]: 70
+    const tests = Test.findAll({
+      where: {
+        grade: {
+          [Sequelize.Op.gt]: 70
+        }
       }
-    }
-  });
-};
+    })
+    return tests
+}
 
-Test.findBySubject = function(type) {
-  return Test.findAll({
-    where: {
-      subject: type
-    }
-  });
-};
+Test.findBySubject = function(subjectName) {
+    const subjects = Test.findAll({
+      where: {
+        subject: subjectName
+      }
+    })
+    return subjects
+}
 
-Test.belongsTo(Student, { as: 'student' });
+Test.belongsTo(Student, {as: 'student'})
+Student.hasMany(Test)
 
 module.exports = Test;
